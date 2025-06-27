@@ -12,7 +12,5 @@
         "psr-4": {
             "Shoprenter\\OauthJWTSecurity\\": "src"
         }
-    },
-    "minimum-stability": "dev",
-    "version": "1.0.0"
+    }
 }
