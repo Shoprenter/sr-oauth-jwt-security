@@ -6,46 +6,37 @@ This Symfony bundle provides JWT-based OAuth token verification and user authent
 
 1. Install the bundle using Composer:
 
-```bash
-composer require shoprenter/sr-oauth-jwt-security
-```
+    ```bash
+    composer require shoprenter/sr-oauth-jwt-security
+    ```
 
-2. Enable the bundle in your `config/bundles.php`:
+2. Configure the bundle in `config/packages/shoprenter.yaml`:
 
-```php
-return [
-    // ...
-    Shoprenter\OauthJWTSecurity\ShoprenterOauthJWTSecurityBundle::class => ['all' => true],
-];
-```
+    ```yaml
+    shoprenter_oauth_jwt_security:
+      oauth_jwt_security:
+        public_key_path: '%kernel.project_dir%/config/jwt/jwtRS256.key.pub'
+    ```
 
-3. Configure the bundle in `config/packages/shoprenter.yaml`:
+3. Configure security in `config/packages/security.yaml`:
 
-```yaml
-shoprenter_oauth_jwt_security:
-  oauth_jwt_security:
-    public_key_path: '%kernel.project_dir%/config/jwt/jwtRS256.key.pub'
-```
-
-4. Configure security in `config/packages/security.yaml`:
-
-```yaml
-security:
-    providers:
-      jwt_users:
-        id: Shoprenter\OauthJWTSecurity\User\OAuthAccessTokenUserProvider
-
-    firewalls:
-      jwt_bearer:
-        pattern: ^/api
-        stateless: true
-        access_token:
-          provider: jwt_users
-          token_handler: Shoprenter\OauthJWTSecurity\AccessToken\OAuthAccessTokenHandler
-
-    access_control:
-        - { path: ^/api, roles: ROLE_JWT_AUTHENTICATED_USER }
-```
+    ```yaml
+    security:
+        providers:
+          jwt_users:
+            id: Shoprenter\OauthJWTSecurity\User\OAuthAccessTokenUserProvider
+    
+        firewalls:
+          jwt_bearer:
+            pattern: ^/api
+            stateless: true
+            access_token:
+              provider: jwt_users
+              token_handler: Shoprenter\OauthJWTSecurity\AccessToken\OAuthAccessTokenHandler
+    
+        access_control:
+            - { path: ^/api, roles: ROLE_JWT_AUTHENTICATED_USER }
+    ```
 
 ## Usage
 
@@ -122,17 +113,17 @@ This bundle follows Symfony's best practices for service configuration:
 
 This approach ensures that services are properly loaded and configured without requiring manual setup in your application.
 
-## Local Development
+## Development
 
-```shell
-docker build -t sr-oauth-jwt-security .
-```
+    ```shell
+    docker build -t sr-oauth-jwt-security .
+    ```
 
 Run the container:
 
-```shell
-docker run -d --name sr-oauth-jwt-security-container -v $(pwd):/var/www sr-oauth-jwt-security
-```
+    ```shell
+    docker run -d --name sr-oauth-jwt-security-container -v $(pwd):/var/www sr-oauth-jwt-security
+    ```
 
 This command:
 
@@ -142,7 +133,23 @@ This command:
 
 Enter the running container:
 
-```shell
-docker exec -it sr-oauth-jwt-security-container bash
-````
+    ```shell
+    docker exec -it sr-oauth-jwt-security-container bash
+    ```
+
+### Running Tests
+
+The bundle includes comprehensive unit tests for all core components. To run the tests:
+
+1. Install the development dependencies:
+
+    ```bash
+    composer install --dev
+    ```
+
+2. Run the PHPUnit tests:
+
+    ```bash
+    ./vendor/bin/phpunit
+    ```
 
