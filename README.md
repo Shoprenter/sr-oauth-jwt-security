@@ -15,7 +15,7 @@ composer require shoprenter/sr-oauth-jwt-security
 ```php
 return [
     // ...
-    Shoprenter\OauthJWTSecurity\OauthJWTSecurityBundle::class => ['all' => true],
+    Shoprenter\OauthJWTSecurity\ShoprenterOauthJWTSecurityBundle::class => ['all' => true],
 ];
 ```
 
