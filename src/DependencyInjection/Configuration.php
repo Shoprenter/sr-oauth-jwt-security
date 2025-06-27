@@ -13,19 +13,18 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
-            ->children()
-                ->arrayNode('oauth_jwt_security')
-                    ->addDefaultsIfNotSet()
+            ->addDefaultsIfNotSet() // A teljes shoprenter konfig is opcionális
+                ->children()
+                    ->arrayNode('oauth_jwt_security')
+                    ->addDefaultsIfNotSet() // Ez biztosítja, hogy az array létezzen, még ha üres is
                     ->children()
                         ->scalarNode('public_key_path')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                            ->info('Path to the public key file used to verify JWT tokens')
+                        ->info('Path to the public key file used to verify JWT tokens')
+                        ->defaultValue('') // Alapértelmezett null érték
                         ->end()
                     ->end()
                 ->end() // End of oauth_jwt_security
-            ->end()
-        ;
+            ->end();
 
         return $treeBuilder;
     }
