@@ -1,9 +1,12 @@
 {
     "name": "shoprenter/sr-oauth-jwt-security",
     "description": "This package provides the ability to secure endpoints with shoprenter oauth token",
+    "type": "symfony-bundle",
+    "license": "MIT",
     "require": {
         "php": ">=8.2",
-        "symfony/security-bundle": "6.4.*"
+        "symfony/security-bundle": "6.4.*",
+        "firebase/php-jwt": "^6.11"
     },
     "autoload": {
         "psr-4": {

@@ -2,6 +2,7 @@
 
 namespace Shoprenter\OauthJWTSecurity;
 
+use Shoprenter\OauthJWTSecurity\User\OAuthAccessTokenUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface;
@@ -30,44 +31,36 @@ class OAuthAccessTokenUserProvider implements AttributesBasedUserProviderInterfa
 
     public function loadUserByIdentifier(string $identifier, array $attributes = []): UserInterface
     {
-        $tokenId = unserialize(base64_decode($identifier));
-
         $token = $attributes['oauth_token_all_claims'] ?? [];
 
         if (!is_array($token) || empty($token)) {
             throw new UserNotFoundException();
         }
 
-        $clientId = $token['aud'][0];
+        $clientId = is_array($token['aud']) ? $token['aud'][0] : $token['aud'];
         $realm = $token['realm'];
         $scopes = $token['scopes'];
-
-        $client = $this->clientProvider->getClient($clientId, $realm);
-        if (!$client) {
-            throw new UserNotFoundException();
-        }
 
         if (!empty($token['user'])) {
             $user = new OAuthAccessTokenUser(
                 sprintf(
-                    '%s | user %s | %s (%s)',
+                    '%s | user %s | %s',
                     $realm,
                     $token['user']['id'],
-                    $clientId,
-                    $client->getName()
+                    $clientId
                 ),
                 $realm
             );
-            $user->setPermissions($scopes);
+            $user->setScopes($scopes);
 
             return $user;
         }
 
         $user = new OAuthAccessTokenUser(
-            sprintf('%s (%s)', $clientId, $client->getName()),
+            $clientId,
             $realm
         );
-        $user->setPermissions($scopes);
+        $user->setScopes($scopes);
 
         return $user;
     }

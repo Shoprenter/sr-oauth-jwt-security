@@ -27,7 +27,7 @@ class OAuthAccessTokenUser implements UserInterface, EquatableInterface, Authori
 
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
+        // Not needed for JWT authentication
     }
 
     public function isEqualTo(UserInterface $user): bool
@@ -48,5 +48,10 @@ class OAuthAccessTokenUser implements UserInterface, EquatableInterface, Authori
     public function getScopes(): array
     {
         return $this->scopes;
+    }
+    
+    public function setScopes(array $scopes): void
+    {
+        $this->scopes = $scopes;
     }
 }
