@@ -119,3 +119,5 @@ This bundle follows Symfony's best practices for service configuration:
 - When the bundle is enabled in your application, all services are automatically registered with the Symfony container
 
 This approach ensures that services are properly loaded and configured without requiring manual setup in your application.
+
+asd
