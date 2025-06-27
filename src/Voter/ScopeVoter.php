@@ -4,7 +4,7 @@ namespace Shoprenter\OauthJWTSecurity\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use User\AuthorizableUserInterface;
+use Shoprenter\OauthJWTSecurity\User\AuthorizableUserInterface;
 
 class ScopeVoter extends Voter
 {

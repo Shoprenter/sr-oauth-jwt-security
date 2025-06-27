@@ -1,0 +1,33 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # Access Token Verifier
+    Shoprenter\OauthJWTSecurity\AccessToken\AccessTokenVerifier:
+        arguments:
+            $publicKeyPath: '%shoprenter.oauth_jwt_security.public_key_path%'
+        
+    Shoprenter\OauthJWTSecurity\AccessToken\AccesTokenVerifierInterface:
+        alias: Shoprenter\OauthJWTSecurity\AccessToken\AccessTokenVerifier
+
+    # OAuth Access Token Handler
+    Shoprenter\OauthJWTSecurity\AccessToken\OAuthAccessTokenHandler:
+        arguments:
+            $accessTokenVerifier: '@Shoprenter\OauthJWTSecurity\AccessToken\AccessTokenVerifier'
+
+    # OAuth User Provider
+    Shoprenter\OauthJWTSecurity\User\OAuthAccessTokenUserProvider:
+        arguments:
+            $accessTokenHandler: '@Shoprenter\OauthJWTSecurity\AccessToken\OAuthAccessTokenHandler'
+
+    # JWT Authenticator
+    Shoprenter\OauthJWTSecurity\Security\JwtTokenAuthenticator:
+        arguments:
+            $accessTokenHandler: '@Shoprenter\OauthJWTSecurity\AccessToken\OAuthAccessTokenHandler'
+
+    # Scope Voter
+    Shoprenter\OauthJWTSecurity\Voter\ScopeVoter:
+        tags:
+            - { name: 'security.voter' }
