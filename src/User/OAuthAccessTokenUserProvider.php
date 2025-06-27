@@ -1,6 +1,6 @@
 <?php
 
-namespace Shoprenter\OauthJWTSecurity;
+namespace Shoprenter\OauthJWTSecurity\User;
 
 use Shoprenter\OauthJWTSecurity\User\OAuthAccessTokenUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;

@@ -22,9 +22,9 @@ return [
 3. Configure the bundle in `config/packages/shoprenter.yaml`:
 
 ```yaml
-shoprenter:
-    oauth_jwt_security:
-        public_key_path: '%kernel.project_dir%/config/jwt/public.pem'
+shoprenter_oauth_jwt_security:
+  oauth_jwt_security:
+    public_key_path: '%kernel.project_dir%/config/jwt/jwtRS256.key.pub'
 ```
 
 4. Configure security in `config/packages/security.yaml`:
@@ -32,8 +32,8 @@ shoprenter:
 ```yaml
 security:
     providers:
-        jwt_users:
-            id: Shoprenter\OauthJWTSecurity\User\OAuthAccessTokenUserProvider
+      jwt_users:
+        id: Shoprenter\OauthJWTSecurity\User\OAuthAccessTokenUserProvider
 
     firewalls:
       jwt_bearer:
@@ -41,7 +41,7 @@ security:
         stateless: true
         access_token:
           provider: jwt_users
-          token_handler: App\Infrastructure\Security\AccessTokenHandler\OAuthAccessTokenHandler
+          token_handler: Shoprenter\OauthJWTSecurity\AccessToken\OAuthAccessTokenHandler
 
     access_control:
         - { path: ^/api, roles: ROLE_JWT_AUTHENTICATED_USER }
@@ -62,8 +62,8 @@ class ProductController extends AbstractController
     public function getProducts(AuthorizationCheckerInterface $authChecker): Response
     {
         // Check if the user has the 'read_products' scope
-        if (!$authChecker->isGranted('SCOPE_read_products')) {
-            throw $this->createAccessDeniedException('Missing required scope: read_products');
+        if (!$authChecker->isGranted('product.product:read')) {
+            throw $this->createAccessDeniedException('Missing required scope');
         }
         
         // Your protected code here...
@@ -80,17 +80,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProductController extends AbstractController
 {
-    #[IsGranted('SCOPE_read_products')]
+    #[IsGranted('product.product:read')]
     public function getProducts(): Response
     {
-        // This endpoint requires the 'read_products' scope
+        // This endpoint requires the 'product.product:write' scope
         // ...
     }
     
-    #[IsGranted('SCOPE_write_products')]
+    #[IsGranted('product.product:write')]
     public function createProduct(): Response
     {
-        // This endpoint requires the 'write_products' scope
+        // This endpoint requires the 'product.product:write' scope
         // ...
     }
 }
@@ -108,6 +108,8 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5...
 
 The authenticator will return a JSON response with a 401 status code if authentication fails.
 
+It will return 403 status if a required scope is missing.
+
 ## Technical Implementation Details
 
 ### Service Configuration
@@ -115,9 +117,7 @@ The authenticator will return a JSON response with a 401 status code if authenti
 This bundle follows Symfony's best practices for service configuration:
 
 - Services are defined in `src/Resources/config/services.yaml`
-- The service configuration is loaded by the bundle's extension class (`OauthJWTSecurityExtension`)
+- The service configuration is loaded by the bundle's extension class (`ShoprenterOauthJWTSecurityExtension`)
 - When the bundle is enabled in your application, all services are automatically registered with the Symfony container
 
 This approach ensures that services are properly loaded and configured without requiring manual setup in your application.
-
-asd
