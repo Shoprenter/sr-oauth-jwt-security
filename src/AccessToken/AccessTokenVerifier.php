@@ -22,14 +22,10 @@ class AccessTokenVerifier implements AccesTokenVerifierInterface
 
         $publicKey = file_get_contents($this->publicKeyPath);
 
-        try {
-            return JWT::decode(
-                $accessToken,
-                new Key($publicKey, 'RS256')
-            );
-        } catch (Exception $exception) {
-            return false;
-        }
+        return JWT::decode(
+            $accessToken,
+            new Key($publicKey, 'RS256')
+        );
     }
 
     private function checkFilePath(): void
